@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OkulPlay - Hızlı Oyun Deposu</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#630ed4",
+            "primary-hover": "#520ab3",
+            "primary-container": "#7c3aed",
+            surface: "#f8f9ff"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#f8f9ff] text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-purple-100 selection:text-purple-900">
+<!-- Header & Search Area -->
+<header class="w-full bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm backdrop-blur-md bg-white/95">
+<div class="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex flex-col items-center text-center">
+<!-- Logo & Title -->
+<a class="flex items-center gap-2.5 mb-1.5 group cursor-pointer" href="#" onclick="resetAllFilters(event)">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[22px]">sports_esports</span>
+</div>
+<div class="text-left">
+<span class="text-lg font-extrabold tracking-tight text-slate-900 leading-none block">Okul<span class="text-purple-600">Play</span></span>
+<span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Hızlı Oyun Deposu</span>
+</div>
+</a>
+<p class="text-xs sm:text-sm text-slate-500 font-medium mb-3">
+        Okul ağlarına uygun, kurulum gerektirmeyen (.zip) direkt Google Drive indirme deposu
+      </p>
+<!-- Search Input -->
+<div class="w-full max-w-lg relative mb-3">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">search</span>
+<input autocomplete="off" class="w-full h-11 pl-10 pr-9 bg-slate-100 hover:bg-slate-100/90 focus:bg-white text-slate-800 rounded-full border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all placeholder:text-slate-400 shadow-inner" id="search-input" placeholder="Oyun ara (CS 1.6, Most Wanted, Warband, San Andreas...)" type="text"/>
+<button aria-label="Aramayı temizle" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none" id="clear-search-btn" onclick="clearSearchInput()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Quick Category Filter Pills -->
+<div class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 text-xs font-semibold" id="category-pills">
+<button class="filter-pill px-3.5 py-1.5 rounded-full bg-purple-600 text-white shadow-md transition-all whitespace-nowrap cursor-pointer" data-cat="all" onclick="setFilter('all', this)">Tümü (8)</button>
+<button class="filter-pill px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all whitespace-nowrap cursor-pointer" data-cat="action" onclick="setFilter('action', this)">Aksiyon &amp; FPS</button>
+<button class="filter-pill px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all whitespace-nowrap cursor-pointer" data-cat="racing" onclick="setFilter('racing', this)">Yarış</button>
+<button class="filter-pill px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all whitespace-nowrap cursor-pointer" data-cat="openworld" onclick="setFilter('openworld', this)">Açık Dünya</button>
+<button class="filter-pill px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all whitespace-nowrap cursor-pointer" data-cat="strategy" onclick="setFilter('strategy', this)">Strateji</button>
+</div>
+</div>
+</header>
+<!-- Main Game Content -->
+<main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+<!-- Notice Badge & Match Count -->
+<div class="flex flex-wrap items-center justify-between gap-2 mb-4 px-1 text-xs text-slate-500">
+<span class="flex items-center gap-1.5 text-emerald-600 font-semibold bg-emerald-50 border border-emerald-200/60 px-3 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        Direkt tek tıkla Google Drive üzerinden kotasız &amp; hızlı indirin
+      </span>
+<span class="text-slate-500 font-medium" id="results-count-badge">8 oyun listeleniyor • Kurulumsuz (.zip)</span>
+</div>
+<!-- Games Grid: Exactly 8 games -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="games-grid">
+<!-- 1. Age of History 2 -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="strategy" data-title="Age of History 2">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="Age of History 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1XdzxPfBtCfwyaJsfSLps5BzcP6NNowv65GDiB-nEcTQ8e97_PWq8uXo52C0aqy6yWGmxGiO8X2_dK9DmbcGQDX7IIIE6XohmGlBOnH0HaWMmQIdUIzzfnvYoKsKO8Z_zXllqbgfXoRiB9UId5y1Eesvj_748tQO41_MeEjHfOVgeEDTYB8Lbgh3S2XIPf2bdvIZS96G7SnwO4vTQSySgzcFyeePyOw4zr-Lrm6TWBlJ_p4Q3pZpJAn"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Strateji</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">120 MB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">Age of History 2</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Dünya haritası, diplomasi ve eyalet fethetme simülatörü.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/file/d/1pxg4Vzlq_Kfr5MKdy2xUP4P4D5ohEFTI/view" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 2. Counter-Strike 1.6 -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="action" data-title="Counter-Strike 1.6">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="Counter-Strike 1.6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1UnIYmA_onbmDFXlZS_QHIhCKasx2spgnQOLPnJiIPAmQ8qXVGK_hyl0Xy7HgnaJeDOP49Djnh6_ygktGRoDimfL_ML8T3SizG7n9ed0Uiqnvcnb-6fgP1QaYoKGtShpjIWYu1DO5uI4iX_EWlAeRZCqlqpWWD0DI4Nm1LPA0V6AtH50Gyn95DsW_NBiU8YQMreShBN-BkuJVWJ_1Rlah4g5-r5o4Sf7YD-Vb-4AEg6nNfi_jmZARg-Lg"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Aksiyon &amp; FPS</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">270 MB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">Counter-Strike 1.6</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Efsane LAN ve bot destekli klasik taktiksel nişancı.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/file/d/1HafRCBfIwuHMS6AB31T3MCkT8BUUx6Sd/view?usp=drive_link" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 3. Live for Speed 2 (LFS 2) -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="racing" data-title="Live for Speed 2 (LFS 2)">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="Live for Speed 2 (LFS 2)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1Vri5vEZ6f_Nl73sIMac2JXHG-w9ABK5oLk_rNaTYKUDKzWEhL6SRyFLzIikkZlPEsbSY1HIvgb6DXxK64d6BYnNN7gmRss-sUWAFQXTV-1vQfRwr3QG-Q1R9IcUblB8RtOweT4ZOnhTmlKIE-1SKYEGBwKnSm8__AqjMcoPi5lDDQHwqnPoT_bm1rJz7V232IyYLMbOzNijgvTI3Sa_YM0E6X2ojOd3e3OBCn4IvcD1aVhTGxan66Stw"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Yarış &amp; Drift</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">135 MB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">Live for Speed 2 (LFS 2)</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Gerçekçi sürüş fizikleri ve okul PC'lerinde akıcı yarış simülatörü.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/file/d/1cK-bqR-Bac9wSNABRVZA1X92yEZZVtbO/view?usp=drive_link" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 4. GTA San Andreas -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="openworld" data-title="GTA San Andreas">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="GTA San Andreas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1Vwv-5qsQt9hS0OKlOgg1V1ayVunap2oLVZ4Phy6TYwB05eDGp6YPiUr0w2EnbSLQ-LNxPJhTn95zoQ7YLuhc7BQDlO_H7AjP_rrdZUt-mOYi7M95irJ9XA_qSZVbTMSiQDSlt_rIhaNIVDqQQWiJ9i8bZU-fTTFVpMAN8r7qDqcvhNRsmwjIdZX3fJvBMQyszOo8J9j6VlawZGdiTiJb743lVzLGzUWerbMQ-wwe-UyVH9oQOfn1E5"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Açık Dünya</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">580 MB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">GTA San Andreas</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">CJ ile Los Santos sokaklarında kurulumsuz klasik açık dünya macerası.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/drive/folders/1mMlbLvtuEKZn-aBZ7Qq8FdB3NIipelHg" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 5. NFS Most Wanted (2005) -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="racing" data-title="NFS Most Wanted (2005)">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="NFS Most Wanted (2005)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1U5e7F61wZbrMW1Vwt3jPMFNpaLwkJYb9-EnT_tJUjyx8I3ur-HDDMU_9ubwjhAb-QF2c7u6qCu4tDqrsyXIsb9-L0z30OUQIPD-Lz5rWqKiteULfJ2V0o9YIKNU-S-0vNaai57Qpb-65MWW_PWEwQga6T2FjTjCk4m1_byMM7IfQJBTpQ0XSchTVgP0j2YtJdL4AGNvJLRAIGzxDiAebhbWPOt7Mj2d_WRgWZ7J9BLugxb8Kxnf2PCMQ"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Yarış &amp; Polis</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">1.8 GB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">NFS Most Wanted (2005)</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Efsane BMW M3 GTR, Blacklist kapışmaları ve Rockport sokak yarışları.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/drive/folders/1aZJjoQJ20F0YpvCZ7kmu-0f6b3LK_alX" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 6. Mount & Blade Warband -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="action strategy openworld" data-title="Mount &amp; Blade Warband">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="Mount &amp; Blade Warband" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1WiyF2_kPsYWf6XUBGxdbpddK7H2Ig_u9tUQzrXNS_ZANZYc4O3mR2P5H9d8jhZZ6hZnCk4g_1yBta27Ray1l25jFyON43S2VkqZhcbeVmn15uN4OS3YqL-S6RNoOgyqoxF6Cr7qGN3RNHi1rCJ_xuFsnlCqhd71LIToxYNgUOZri-Jf_giXHSMZSImXpFy3dQ1YgSa9N1bB3EiKzCzbZpcmDv_QugAcBQpepIC8iuE5lZ04YgdXIx5tw"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Orta Çağ RPG</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">950 MB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">Mount &amp; Blade Warband</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Kalradya diyarında ordu yönetme, kale kuşatmaları ve şövalye savaşları.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/file/d/1LSZIBwUjNgnhsNTARCuYD0rZh3KHDVbq/view" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 7. Bully: Scholarship Edition -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="openworld action" data-title="Bully: Scholarship Edition">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="Bully: Scholarship Edition" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1UBjnvNXHDX_3uFIeR22yZW88d6DnsPWiqhGNzcf8LJKqVwLb7Ls8t1QkNvN0KYF6Bu7KTUCiH0UqAw15aGyJB0_doQIsi2zL_TBum8yZpFsENl_VbjcBIkUW007F0E91EBLlPBnP4vo8DIoWPlAgEgLlRj1r2_UtcmSyy_S_6REg0iYGhXelbmH-2dhjyiWDj6tj_5i809jYQDYRTiUWvCyZM5ilBNxQRggFJdS0Pb3tGmWMcbUDXkRw"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Açık Dünya</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">2.1 GB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">Bully: Scholarship Edition</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Bullworth Akademisi'nde Jimmy Hopkins ile okul hiyerarşisine karşı klasik Rockstar oyunu.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/drive/folders/1_8N-9aI5mKQKXumvba_V_zhB8OdszEcf" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+<!-- 8. Nova Roma -->
+<div class="game-item bg-white rounded-2xl border border-slate-200/80 hover:border-purple-300 p-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group shadow-sm" data-category="strategy" data-title="Nova Roma">
+<div>
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+<img alt="Nova Roma" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1XwWaQys2k1oV0I5b5U0iDPgjQ7dVIlpTzMj93r8bwwh5K-wp9XK7e6UloZZXsAoDkxmsG8kEPYvHYnwlUFEXJZRDPHfpVNRivYACd2Zpu81q4oA18YRu-DVDnCaPntFqNqlalVA7ZzHXYWqYaHgfXn3EvBo4wzAeHmplpsLECTBi7t76MuCpLr9k8RkjjfXzb4m0TjwHInFf4YdPF5Ij0ZhAQ_CCHED9WoqeJCk8_XXXeA20-f8MkDXA"/>
+<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Şehir Kurma</span>
+<span class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2 py-0.5 rounded-md">450 MB</span>
+</div>
+<h3 class="font-bold text-base text-slate-900 line-clamp-1 group-hover:text-purple-600 transition-colors">Nova Roma</h3>
+<p class="text-xs text-slate-500 line-clamp-2 mt-1 mb-3 leading-relaxed">Antik Roma mimarisi, su kemerleri ve şehir inşa etme simülasyonu.</p>
+</div>
+<a class="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors shadow-purple-600/20" href="https://drive.google.com/file/d/1LQUYnj28ax9pBe2gM-31TL7n8kQB6PY3/view?usp=drive_link" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Google Drive İndir</span>
+</a>
+</div>
+</div>
+<!-- Empty State if no game found -->
+<div class="hidden text-center py-16 px-4 bg-white/70 rounded-2xl border border-dashed border-slate-300 mt-2" id="no-results">
+<span class="material-symbols-outlined text-slate-400 text-5xl mb-2">search_off</span>
+<p class="text-sm sm:text-base font-bold text-slate-700">Aradığınız kriterlere uygun oyun bulunamadı.</p>
+<p class="text-xs text-slate-500 mt-1 mb-4">Farklı bir arama terimi deneyin veya filtreleri temizleyin.</p>
+<button class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-colors" onclick="resetAllFilters()">
+        Filtreleri Temizle
+      </button>
+</div>
+</main>
+<!-- Minimal Footer -->
+<footer class="w-full py-4 border-t border-slate-200 bg-white text-center text-xs text-slate-500 mt-auto">
+<div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
+<span class="flex items-center gap-1 font-medium text-slate-700">
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
+        Tüm oyunlar kurulumsuzdur (.zip) ve virüs taramasından geçmiştir.
+      </span>
+<span class="hidden sm:inline text-slate-300">•</span>
+<span>OkulPlay © 2024</span>
+</div>
+</footer>
+<!-- Search & Filter Scripts -->
+<script>
+    let currentCategory = 'all';
+    const totalGames = 8;
+    const searchInput = document.getElementById('search-input');
+    const clearBtn = document.getElementById('clear-search-btn');
+    const resultsBadge = document.getElementById('results-count-badge');
+    const noResults = document.getElementById('no-results');
+    const allPill = document.querySelector('.filter-pill[data-cat="all"]');
+
+    // Turkish-aware lowercasing helper
+    function normalizeText(str) {
+      if (!str) return '';
+      return str
+        .replace(/İ/g, 'i')
+        .replace(/I/g, 'ı')
+        .replace(/Ğ/g, 'ğ')
+        .replace(/Ü/g, 'ü')
+        .replace(/Ş/g, 'ş')
+        .replace(/Ö/g, 'ö')
+        .replace(/Ç/g, 'ç')
+        .toLowerCase()
+        .trim();
+    }
+
+    function setFilter(cat, btn) {
+      currentCategory = cat;
+      const pills = document.querySelectorAll('.filter-pill');
+      pills.forEach(b => {
+        b.className = 'filter-pill px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all whitespace-nowrap cursor-pointer';
+      });
+      if (btn) {
+        btn.className = 'filter-pill px-3.5 py-1.5 rounded-full bg-purple-600 text-white shadow-md transition-all whitespace-nowrap cursor-pointer';
+      }
+      applyFilters();
+    }
+
+    searchInput.addEventListener('input', () => {
+      if (searchInput.value.trim().length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      applyFilters();
+    });
+
+    function clearSearchInput() {
+      searchInput.value = '';
+      clearBtn.classList.add('hidden');
+      searchInput.focus();
+      applyFilters();
+    }
+
+    function resetAllFilters(e) {
+      if (e) e.preventDefault();
+      searchInput.value = '';
+      clearBtn.classList.add('hidden');
+      setFilter('all', allPill);
+    }
+
+    function applyFilters() {
+      const q = normalizeText(searchInput.value);
+      const items = document.querySelectorAll('.game-item');
+      let visibleCount = 0;
+
+      items.forEach(item => {
+        const itemCat = (item.getAttribute('data-category') || '').toLowerCase();
+        const titleEl = item.querySelector('h3');
+        const descEl = item.querySelector('p');
+        const badgeEl = item.querySelector('span');
+
+        const titleText = normalizeText(titleEl ? titleEl.innerText : '');
+        const descText = normalizeText(descEl ? descEl.innerText : '');
+        const badgeText = normalizeText(badgeEl ? badgeEl.innerText : '');
+
+        // Category match logic
+        const matchesCat = (currentCategory === 'all') || itemCat.includes(currentCategory);
+
+        // Search match logic across title, description and tag
+        const matchesSearch = !q || titleText.includes(q) || descText.includes(q) || badgeText.includes(q);
+
+        if (matchesCat && matchesSearch) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      // Update counter badge
+      if (resultsBadge) {
+        if (visibleCount === totalGames && !q && currentCategory === 'all') {
+          resultsBadge.innerText = '8 oyun listeleniyor • Kurulumsuz (.zip)';
+        } else {
+          resultsBadge.innerText = `${visibleCount} oyun bulundu • Kurulumsuz (.zip)`;
+        }
+      }
+
+      // Toggle empty state
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    }
+  </script>
+</body></html>
